@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Code Clinic: JavaScript</title>
+  <link rel="stylesheet" href="css/bootstrap.min.css">
+  <link href="css/c3.css" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="bg-info font-weight-light">
+  <header class="header">
+    <div class="container my-4">
+        <h1 class="display-5 font-weight-light text-white"><i class="icon icon-codeclinic"></i> Code Clinic: Lake Pend Oreille</h1>
+    </div>
+  </header>
+  <div class="bg-white">
+    <div class="container">
+      <p class="pt-3">In this example, we’ll use weather data collected by the US Navy from Lake Pend Oreille in Northern Idaho and JavaScript to visualize and query the date from an API.</p>
+      <div class="row dateselector">
+        <div class="col-sm-12 center">
+          <form class="row form-inline" name="rangeform">
+            <div class="col-sm-12">
+              <label>from&nbsp;<input type="date" required name="from" class="form-control"></label>
+              <label>to&nbsp;<input type="date" required class="form-control" name="to"></label>
+            </div>
+          </form>
+        </div><!-- col-md-12 -->
+      </div>
+      <div class="row chart">
+        <div class="col-md-12">
+        <figure>
+        <div id="chart"></div>
+        <figcaption>Click and drag on the bottom chart to see a smaller range</figcaption>
+        </figure>
+        </div><!-- col -->
+      </div><!-- row -->
+    </div><!-- container -->
+  </div><!-- main -->
+  <footer class="footer container pt-4" style="color: hsla(189,60%,50%,1)">
+    <h4>About Code Clinic</h4>
+    <p class="small">Code Clinic is a monthly course where a unique problem is introduced to a collection of lynda.com authors. In response, each author will create a solution using their programming language of choice. You can learn several things from Code Clinic: different approaches to solving a problem, the pros and cons of different languages, and some tips and tricks to incorporate into your own coding practices.</p>
+  </footer>
+
+<script src="js/jquery.min.js"></script>
+<script src="js/bootstrap.min.js"></script>
+
+<!-- Load d3.js and c3.js -->
+<script src="js/d3.min.js"></script>
+<script src="js/c3.min.js"></script>
+
+<script src="js/script.js"></script>
+</body>
+</html>

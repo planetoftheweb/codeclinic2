@@ -1,0 +1,14 @@
+.icon {
+  display: inline-block;
+  font-size: inherit;
+  height: 1em;
+  width: 1em;
+  overflow: visible;
+  vertical-align: -.125em;  
+  text-rendering: auto;
+}
+
+.icon-codeclinic { 
+  background: url('../images/codeclinicicon_white.svg') no-repeat center center;
+  background-size: contain;
+}
