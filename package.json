@@ -1,12 +1,11 @@
 {
-  "name": "codeclinic",
-  "version": "2.0.0",
-  "description": "A repository for Code Clinic: JavaScript",
+  "name": "miniserver",
+  "version": "1.0.0",
+  "description": "This package.json allows you to run a mini-server just for previewing presentations.",
+  "main": "gulpfile.js",
   "devDependencies": {
-    "babel-core": "^6.26.3",
     "gulp": "^3.9.1",
-    "gulp-babel": "^7.0.1",
-    "gulp-sourcemaps": "^2.6.4",
+    "gulp-postcss": "^6.4.0",
     "gulp-webserver": "^0.9.1"
   },
   "author": "Ray Villalobos"
