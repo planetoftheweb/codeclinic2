@@ -1,147 +1,42 @@
 $(function () {
 
-  'use strict';
+  var myMap = document.querySelector('.my-map');
 
-  var fromDate, toDate;
-  var myDate = '2005-12-31';
-
-  function getMean(myArray) {
-    var mean = myArray.reduce(function (a, b) {
-      return a + b;
-    }) / myArray.length;
-    return mean.toFixed(2);
-  } //getMean
-
-  function getMedian(myArray) {
-    var median;
-    var sorted = myArray.sort(function (a, b) {
-      return a > b;
-    });
-    var middleIndex = Math.floor(sorted.length / 2);
-
-    if (sorted.length % 2 === 0) {
-      var medianA = sorted[middleIndex];
-      var medianB = sorted[middleIndex - 1];
-      median = (medianA + medianB) / 2;
-    } else {
-      median = sorted[middleIndex];
-    }
-
-    return median.toFixed(2);
-  } //getMedian
-
-
-  function processData(data) {
-    var myData = [];
-
-    var myDates = ['x'];
-    var meanTemps = ['Mean Temperature'];
-    var medTemps = ['Median Temperature'];
-    var meanPress = ['Mean Pressure'];
-    var medPress = ['Median Pressure'];
-    var meanSpeeds = ['Mean Speed'];
-    var medSpeeds = ['Median Speed'];
-
-    for (var key in data) {
-      if (data.hasOwnProperty(key)) {
-        if (data[key].t !== null && data[key].p !== null && data[key].s !== null) {
-          myDates.push(key);
-          meanTemps.push(getMean(data[key].t));
-          medTemps.push(getMedian(data[key].t));
-          meanPress.push(getMean(data[key].p));
-          medPress.push(getMedian(data[key].p));
-          meanSpeeds.push(getMean(data[key].s));
-          medSpeeds.push(getMedian(data[key].s));
-        } //data is not null
-      } // hasOwnProperty
-    } // for key in data
-
-    myData.push(myDates, meanTemps, medTemps, meanPress, medSpeeds, meanSpeeds);
-    return myData;
-  } // Process Data
-
-  function generateChart(data) {
-    var chart = c3.generate({
-
-      data: {
-        x: 'x',
-        columns: data,
-        type: 'bar',
-        groups: [['Mean Temperature', 'Median Temperature', 'Mean Pressure', 'Median Pressure', 'Mean Speed', 'Median Speed']]
-      },
-      bar: {
-        width: {
-          ratio: 0.9
-        }
-      },
-      axis: {
-        x: {
-          type: 'timeseries',
-          tick: {
-            format: '%Y-%m-%d'
-          } // x
-        } }, // axis
-      subchart: {
-        show: true //subchart
-      } }); // chart
-  } // generateChart
-
-
-  function loadChart() {
-    $.ajax({
-      url: 'http://foundationphp.com/phpclinic/podata.php?&raw&callback=?',
-      jsonpCallback: 'jsonReturnData',
-      dataType: 'jsonp',
-      data: {
-        startDate: formatDate(fromDate, ''),
-        endDate: formatDate(toDate, ''),
-        format: 'json'
-      },
-      success: function (response) {
-        generateChart(processData(response));
-      } //success
-
-    }); //AJAX Call
-  } //load Chart
-
-  function formatDate(date, divider) {
-    var someday = new Date(date);
-    var month = someday.getUTCMonth() + 1;
-    var day = someday.getUTCDate();
-    var year = someday.getUTCFullYear();
-
-    if (month <= 9) {
-      month = '0' + month;
-    }
-    if (day <= 9) {
-      day = '0' + day;
-    }
-
-    return '' + year + divider + month + divider + day;
+  if (!navigator.geolocation){
+    myMap.innerHTML = '<p>Geolocation is not supported by your browser</p>';
+    return;
   }
 
-  //set up
+  function success(position) {
+    var latitude  = position.coords.latitude;
+    var longitude = position.coords.longitude;
 
-  fromDate = new Date(myDate);
-  fromDate.setDate(fromDate.getDate() - 31);
+    myMap.innerHTML = '<p><strong>Latitude</strong>: ' + latitude + '° <br><strong>Longitude</strong>: ' + longitude + '°</p>';
 
-  toDate = new Date(myDate);
-  toDate.setDate(toDate.getDate() - 1);
+    var link = document.createElement('a');
+      link.href = 'https://www.google.com/maps/search/?api=1&query='
+      + latitude + ',' + longitude;
 
-  document.forms.rangeform.from.value = formatDate(fromDate, '-');
-  document.forms.rangeform.to.value = formatDate(toDate, '-');
+    var img = document.createElement('img');
+      img.className = 'img-fluid';
+      img.src = 'https://maps.googleapis.com/maps/api/staticmap?center=' +
+      latitude + ',' + longitude +
+      '&markers=color:red|' + latitude + ',' + longitude +
+      '&zoom=12&size=600x300&scale=2&sensor=true';
 
-  loadChart();
+      link.appendChild(img);
+      myMap.appendChild(link);
+  }
 
-  // Events -------
+  function error() {
+    myMap.innerHTML = 'Unable to retrieve your location';
+  }
 
-  document.forms.rangeform.addEventListener('change', function (e) {
-    fromDate = new Date(document.rangeform.from.value);
-    toDate = new Date(document.rangeform.to.value);
+  myMap.innerHTML = '<p>Locating…</p>';
 
-    fromDate = fromDate.toUTCString();
-    toDate = toDate.toUTCString();
+  navigator.geolocation.getCurrentPosition(success, error);
 
-    loadChart();
-  }, false);
 }); // Page Loaded
+
+// https://developers.google.com/maps/documentation/maps-static/intro
+// https://developers.google.com/maps/documentation/urls/guide

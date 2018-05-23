@@ -6,43 +6,22 @@
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <title>Code Clinic: JavaScript</title>
   <link rel="stylesheet" href="css/bootstrap.min.css">
-  <link href="css/c3.css" rel="stylesheet">
   <link rel="stylesheet" href="css/style.css">
 </head>
 <body class="bg-info">
   <header class="header">
     <div class="container my-4">
-        <h1 class="display-5 font-weight-light text-white"><i class="icon icon-codeclinic"></i> Code Clinic: Lake Pend Oreille</h1>
+        <h1 class="display-5 font-weight-light text-white"><i class="icon icon-codeclinic"></i> Code Clinic: Where am I?</h1>
     </div>
   </header>
   <div class="bg-white py-5">
     <div class="container">
-        <form name="rangeform" class="mb-2">
-          <div class="form-row justify-content-center">
-            <div class="input-group col-8 col-sm-6 col-md-4 col-lg-3 mb-2 mb-sm-auto">
-              <div class="input-group-prepend"><span class="input-group-text" required>from</span></div>
-              <input class="form-control" name="from" type="date">
-            </div>
-                    
-            <div class="input-group col-8 col-sm-6 col-md-4 col-lg-3">
-              <div class="input-group-prepend"><span class="input-group-text" required>to</span></div>
-              <input class="form-control" type="date" name="to">
-            </div>
-          </div>
-        </form>
-        <div id="chart"></div>
-        <p class="mt-5 text-center">Click and drag on the bottom chart to see a smaller range</p>
+      <div class="my-map"></div>
     </div>
   </div><!-- background -->
-<footer class="footer container py-4" style="color: hsla(189,60%,50%,1)">
-  <h4>About Code Clinic</h4>
-  <p class="small">Code Clinic is a monthly course where a unique problem is introduced to a collection of lynda.com authors. In response, each author will create a solution using their programming language of choice. You can learn several things from Code Clinic: different approaches to solving a problem, the pros and cons of different languages, and some tips and tricks to incorporate into your own coding practices.</p>
-</footer>
 
 <script src="js/jquery.min.js"></script>
 <script src="js/bootstrap.min.js"></script>
-<script src="js/d3.min.js"></script>
-<script src="js/c3.min.js"></script>
 
 <script src="js/script.js"></script>
 </body>
