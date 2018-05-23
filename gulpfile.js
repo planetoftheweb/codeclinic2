@@ -1,6 +1,6 @@
 const
   gulp = require('gulp'),
-  webserver = require('gulp-webserver'),
+  webserver = require('gulp-server-io'),
   babel = require('gulp-babel'),
   sourcemaps = require('gulp-sourcemaps'),
 
@@ -34,7 +34,13 @@ gulp.task('watch', function() {
 gulp.task('webserver', function() {
   gulp.src(dest)
     .pipe(webserver({
-      livereload: true,
+      serverReload: {
+        dir: dest,
+        config: {verbose: true, debounce: 1000},
+        callback: files => {
+          // perform your server side restart
+        }
+      },
       port: 3000,
       open: true
     }));    

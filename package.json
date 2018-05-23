@@ -6,8 +6,8 @@
     "babel-core": "^6.26.3",
     "gulp": "^3.9.1",
     "gulp-babel": "^7.0.1",
-    "gulp-sourcemaps": "^2.6.4",
-    "gulp-webserver": "^0.9.1"
+    "gulp-server-io": "^1.4.0",
+    "gulp-sourcemaps": "^2.6.4"
   },
   "author": "Ray Villalobos"
 }
