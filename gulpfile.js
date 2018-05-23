@@ -14,7 +14,6 @@ gulp.task('css', function() {
 });
 
 gulp.task('watch', function() {
-  gulp.watch(source + '**/*.js', ['js']);
   gulp.watch(source + '**/*.css', ['css']); //CSS
   gulp.watch(source + '**/*.html', ['html']);
 });
@@ -29,7 +28,7 @@ gulp.task('webserver', function() {
           // perform your server side restart
         }
       },
-      port: 3000,
+      port: 3333,
       open: true
     }));    
 });
