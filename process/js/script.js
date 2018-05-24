@@ -1,147 +1,159 @@
-$(function () {
-
+$(function() {
   'use strict';
 
-  var fromDate, toDate;
-  var myDate = '2005-12-31';
+  /* Based on: 
+    http://code.activestate.com/recipes/578497-eight-queen-problem-javascript/
+    By Thomas Lehmann
+  */
 
-  function getMean(myArray) {
-    var mean = myArray.reduce(function (a, b) {
-      return a + b;
-    }) / myArray.length;
-    return mean.toFixed(2);
-  } //getMean
+  var OCCUPIED = 1; // field is in use
+  var FREE = 0; // field is not in use
+  var columnNames = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'];
+  var numColumns = 8;
+  var allSolutions = [];
+  var logging = false;
+  var solutionsQty;
+  var currentSolution = 0;
 
-  function getMedian(myArray) {
-    var median;
-    var sorted = myArray.sort(function (a, b) {
-      return a > b;
-    });
-    var middleIndex = Math.floor(sorted.length / 2);
+  function Board() {
 
-    if (sorted.length % 2 === 0) {
-      var medianA = sorted[middleIndex];
-      var medianB = sorted[middleIndex - 1];
-      median = (medianA + medianB) / 2;
-    } else {
-      median = sorted[middleIndex];
+    this.width = numColumns;
+    this.lastRow = this.width - 1;
+    this.columns = new Array(this.width);
+
+    var numberOfDiagonals = 2 * this.width - 1;
+    this.diagDown = new Array(numberOfDiagonals);
+    this.diagUp = new Array(numberOfDiagonals);
+    this.solutions = [];
+
+    for (var index = 0; index < numberOfDiagonals; ++index) {
+      if (index < this.width) {
+        this.columns[index] = -1;
+      }
+      this.diagDown[index] = FREE;
+      this.diagUp[index] = FREE;
     }
-
-    return median.toFixed(2);
-  } //getMedian
+    this.position = numColumns;
 
 
-  function processData(data) {
-    var myData = [];
-
-    var myDates = ['x'];
-    var meanTemps = ['Mean Temperature'];
-    var medTemps = ['Median Temperature'];
-    var meanPress = ['Mean Pressure'];
-    var medPress = ['Median Pressure'];
-    var meanSpeeds = ['Mean Speed'];
-    var medSpeeds = ['Median Speed'];
-
-    for (var key in data) {
-      if (data.hasOwnProperty(key)) {
-        if (data[key].t !== null && data[key].p !== null && data[key].s !== null) {
-          myDates.push(key);
-          meanTemps.push(getMean(data[key].t));
-          medTemps.push(getMedian(data[key].t));
-          meanPress.push(getMean(data[key].p));
-          medPress.push(getMedian(data[key].p));
-          meanSpeeds.push(getMean(data[key].s));
-          medSpeeds.push(getMedian(data[key].s));
-        } //data is not null
-      } // hasOwnProperty
-    } // for key in data
-
-    myData.push(myDates, meanTemps, medTemps, meanPress, medSpeeds, meanSpeeds);
-    return myData;
-  } // Process Data
-
-  function generateChart(data) {
-    var chart = c3.generate({
-
-      data: {
-        x: 'x',
-        columns: data,
-        type: 'bar',
-        groups: [['Mean Temperature', 'Median Temperature', 'Mean Pressure', 'Median Pressure', 'Mean Speed', 'Median Speed']]
-      },
-      bar: {
-        width: {
-          ratio: 0.9
+    // searches for all possible solutions
+    this.tryNewQueen = function(row) {
+      for (var column = 0; column < numColumns; column++) {
+        logging && console.log('-----------');
+        logging && console.log('Pos: ' + columnNames[row] + (column + 1));
+        // current column blocked?
+        if (this.columns[column] >= 0) {
+          logging && console.log('column blocked');
+          continue;
         }
-      },
-      axis: {
-        x: {
-          type: 'timeseries',
-          tick: {
-            format: '%Y-%m-%d'
-          } // x
-        } }, // axis
-      subchart: {
-        show: true //subchart
-      } }); // chart
-  } // generateChart
 
+        // relating diagonale '\' depending on current row and column
+        var diagDownIndex = row + column;
+        if (this.diagDown[diagDownIndex] === OCCUPIED) {
+          logging && console.log('diagDown occupied');
+          continue;
+        }
 
-  function loadChart() {
-    $.ajax({
-      url: 'http://foundationphp.com/phpclinic/podata.php?&raw&callback=?',
-      jsonpCallback: 'jsonReturnData',
-      dataType: 'jsonp',
-      data: {
-        startDate: formatDate(fromDate, ''),
-        endDate: formatDate(toDate, ''),
-        format: 'json'
-      },
-      success: function (response) {
-        generateChart(processData(response));
-      } //success
+        // relating diagonale '/' depending on current row and column
+        var diagonalUpIndex = this.position - 1 - row + column;
+        if (this.diagUp[diagonalUpIndex] === OCCUPIED) {
+          logging && console.log('diagUp occupied');
+          continue;
+        }
 
-    }); //AJAX Call
-  } //load Chart
+        // occupying column and diagonals depending on current row and column
+        this.columns[column] = row;
+        this.diagDown[diagDownIndex] = OCCUPIED;
+        this.diagUp[diagonalUpIndex] = OCCUPIED;
 
-  function formatDate(date, divider) {
-    var someday = new Date(date);
-    var month = someday.getUTCMonth() + 1;
-    var day = someday.getUTCDate();
-    var year = someday.getUTCFullYear();
+        if (row === (this.width - 1)) {
+          this.solutions.push(this.columns.slice(0));
+          logging && console.log('================= SUCCESS =================');
+          logging && console.log(this.solutions);
 
-    if (month <= 9) {
-      month = '0' + month;
-    }
-    if (day <= 9) {
-      day = '0' + day;
-    }
+          for (var rowIndex = 0; rowIndex < this.solutions.length; ++rowIndex) {
+            var solution = this.solutions[rowIndex];
+            var line = '';
+            for (var colIndex = 0; colIndex < this.solutions.length; ++colIndex) {
+              line += columnNames[colIndex] + (solution[colIndex] + 1 + ' ');
+            }
+            logging && console.log(line);
+          }
+        } else {
+          this.tryNewQueen(row + 1);
+        }
 
-    return '' + year + divider + month + divider + day;
+        this.columns[column] = -1;
+        logging && console.log('<========== BACKTRACKING');
+        this.diagDown[diagDownIndex] = FREE;
+        this.diagUp[diagonalUpIndex] = FREE;
+      }
+    };
   }
 
-  //set up
+  var myBoard = new Board();
+  myBoard.tryNewQueen(0);
+  solutionsQty = myBoard.solutions.length;
+  document.querySelector('#currentSolution').innerHTML = 1;
+  document.querySelector('#totalSolutions').innerHTML = solutionsQty;
+  logging && console.log('Found ' + myBoard.solutions.length + ' solutions');
 
-  fromDate = new Date(myDate);
-  fromDate.setDate(fromDate.getDate() - 31);
+  for (var rowIndex = 0; rowIndex < myBoard.solutions.length; ++rowIndex) {
+    var solution = myBoard.solutions[rowIndex];
+    var singleSolution = [];
+    for (var colIndex = 0; colIndex < solution.length; ++colIndex) {
+      singleSolution.push(columnNames[colIndex] + (solution[colIndex] + 1));
+    }
+    allSolutions.push(singleSolution);
+  }
 
-  toDate = new Date(myDate);
-  toDate.setDate(toDate.getDate() - 1);
+  logging && console.log(allSolutions);
 
-  document.forms.rangeform.from.value = formatDate(fromDate, '-');
-  document.forms.rangeform.to.value = formatDate(toDate, '-');
+  function displaySolution(solutionId) {
+    for (var index = 0; index < allSolutions[solutionId].length; index++) {
+      document.querySelector('#' + allSolutions[solutionId][index] + ' .queen').style.fill = '#D33682';
+    }
+  }
 
-  loadChart();
+  function clearBoard() {
+    for (var colIndex = 0; colIndex < columnNames.length; colIndex++) {
+      for (var rowIndex = 0; rowIndex < numColumns; rowIndex++) {
+        document.querySelector('#' + columnNames[colIndex] + (rowIndex + 1) + ' .queen').style.fill = 'transparent';
+      }
+    }
+  }
 
-  // Events -------
+  displaySolution(currentSolution);
 
-  document.forms.rangeform.addEventListener('change', function (e) {
-    fromDate = new Date(document.rangeform.from.value);
-    toDate = new Date(document.rangeform.to.value);
+  // Events
+  document.querySelector('#previous').addEventListener('click', function(e) {
+    console.log('this');
+    currentSolution--;
+    if (currentSolution < 1) {
+      currentSolution = allSolutions.length - 1;
+    }
+    clearBoard();
+    document.querySelector('#currentSolution').innerHTML = currentSolution + 1;
+    displaySolution(currentSolution);
+  });
 
-    fromDate = fromDate.toUTCString();
-    toDate = toDate.toUTCString();
+  document.querySelector('#next').addEventListener('click', function(e) {
+    currentSolution++;
+    if (currentSolution > allSolutions.length - 1) {
+      currentSolution = 0;
+    }
+    clearBoard();
+    document.querySelector('#currentSolution').innerHTML = currentSolution + 1;
+    displaySolution(currentSolution);
+  });
 
-    loadChart();
+  document.querySelector('#Board').addEventListener('click', function(e) {
+    if (e.target.tagName === 'path') {
+      if (e.target.style.fill === 'rgb(211, 54, 130)') {
+        e.target.style.fill = 'transparent';
+      } else {
+        e.target.style.fill = 'rgb(211, 54, 130)';
+      }
+    }
   }, false);
-}); // Page Loaded
+}); // page loaded

@@ -12,3 +12,16 @@
   background: url('../images/codeclinicicon_white.svg') no-repeat center center;
   background-size: contain;
 }
+
+.noselect {
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+.text-highlight {
+  color: rgb(211, 54, 130);
+}
