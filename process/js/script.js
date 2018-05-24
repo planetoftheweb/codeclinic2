@@ -1,147 +1,82 @@
-$(function () {
-
+$(function() {
   'use strict';
 
-  var fromDate, toDate;
-  var myDate = '2005-12-31';
+  var mySound, myOscillator, myGain, myDistortion, originalYPos, originalFrequency,
+      scaleFrequencies = [110, 123.47, 130.81, 146.83, 164.81, 174.61, 196, 220, 246.94, 261.63, 293.66, 329.63, 349.23, 392, 440, 493.88, 523.25, 587.33, 659.25, 698.46, 783.99, 880, 987.77, 1046.50, 1174.66, 1318.51, 1396.91, 1567.98, 1760],
+      appNode = document.querySelector('.app'),
+      appWidth = appNode.offsetWidth,
+      mouseXpos = window.clientX,
+      mouseYpos = window.clientY;
 
-  function getMean(myArray) {
-    var mean = myArray.reduce(function (a, b) {
-      return a + b;
-    }) / myArray.length;
-    return mean.toFixed(2);
-  } //getMean
+      appNode.style.background = 'repeating-linear-gradient(to right, #FDF6E4, #FDF6E4 50%, #F7EFD7 50%, #F7EFD7)';
+      appNode.style.backgroundSize = ((appWidth / scaleFrequencies.length)*2) + 'px 100%';
 
-  function getMedian(myArray) {
-    var median;
-    var sorted = myArray.sort(function (a, b) {
-      return a > b;
-    });
-    var middleIndex = Math.floor(sorted.length / 2);
+      var contextClass = (window.AudioContext  || window.webkitAudioContext);
 
-    if (sorted.length % 2 === 0) {
-      var medianA = sorted[middleIndex];
-      var medianB = sorted[middleIndex - 1];
-      median = (medianA + medianB) / 2;
-    } else {
-      median = sorted[middleIndex];
-    }
-
-    return median.toFixed(2);
-  } //getMedian
-
-
-  function processData(data) {
-    var myData = [];
-
-    var myDates = ['x'];
-    var meanTemps = ['Mean Temperature'];
-    var medTemps = ['Median Temperature'];
-    var meanPress = ['Mean Pressure'];
-    var medPress = ['Median Pressure'];
-    var meanSpeeds = ['Mean Speed'];
-    var medSpeeds = ['Median Speed'];
-
-    for (var key in data) {
-      if (data.hasOwnProperty(key)) {
-        if (data[key].t !== null && data[key].p !== null && data[key].s !== null) {
-          myDates.push(key);
-          meanTemps.push(getMean(data[key].t));
-          medTemps.push(getMedian(data[key].t));
-          meanPress.push(getMean(data[key].p));
-          medPress.push(getMedian(data[key].p));
-          meanSpeeds.push(getMean(data[key].s));
-          medSpeeds.push(getMedian(data[key].s));
-        } //data is not null
-      } // hasOwnProperty
-    } // for key in data
-
-    myData.push(myDates, meanTemps, medTemps, meanPress, medSpeeds, meanSpeeds);
-    return myData;
-  } // Process Data
-
-  function generateChart(data) {
-    var chart = c3.generate({
-
-      data: {
-        x: 'x',
-        columns: data,
-        type: 'bar',
-        groups: [['Mean Temperature', 'Median Temperature', 'Mean Pressure', 'Median Pressure', 'Mean Speed', 'Median Speed']]
-      },
-      bar: {
-        width: {
-          ratio: 0.9
+      function makeDistortionCurve(amount) {
+        var k = typeof amount === 'number' ? amount : 50,
+          n_samples = 44100,
+          curve = new Float32Array(n_samples),
+          deg = Math.PI / 180,
+          i = 0,
+          x;
+        for ( ; i < n_samples; ++i ) {
+          x = i * 2 / n_samples - 1;
+          curve[i] = ( 3 + k ) * x * 20 * deg / ( Math.PI + k * Math.abs(x) );
         }
-      },
-      axis: {
-        x: {
-          type: 'timeseries',
-          tick: {
-            format: '%Y-%m-%d'
-          } // x
-        } }, // axis
-      subchart: {
-        show: true //subchart
-      } }); // chart
-  } // generateChart
+        return curve;
+      }
 
 
-  function loadChart() {
-    $.ajax({
-      url: 'http://foundationphp.com/phpclinic/podata.php?&raw&callback=?',
-      jsonpCallback: 'jsonReturnData',
-      dataType: 'jsonp',
-      data: {
-        startDate: formatDate(fromDate, ''),
-        endDate: formatDate(toDate, ''),
-        format: 'json'
-      },
-      success: function (response) {
-        generateChart(processData(response));
-      } //success
+      if (contextClass) {
+        mySound = new contextClass();
+      } else {
+        document.querySelector('.app').innerHTML = '<div class="container alert alert-danger" role="alert">Sorry, this app requires the Web Audio API, which your browser does not support.</div>';
+      }
 
-    }); //AJAX Call
-  } //load Chart
+      appNode.addEventListener('mousedown', function(e) {
 
-  function formatDate(date, divider) {
-    var someday = new Date(date);
-    var month = someday.getUTCMonth() + 1;
-    var day = someday.getUTCDate();
-    var year = someday.getUTCFullYear();
+        mouseXpos = e.clientX;
+        mouseYpos = e.clientY;
+        originalYPos = mouseYpos;
 
-    if (month <= 9) {
-      month = '0' + month;
-    }
-    if (day <= 9) {
-      day = '0' + day;
-    }
+        myOscillator = mySound.createOscillator();
+        myOscillator.type = 'sine'; // sine square sawtooth triangle
 
-    return '' + year + divider + month + divider + day;
-  }
+        originalFrequency = scaleFrequencies[Math.floor((mouseXpos/appWidth) * scaleFrequencies.length)];
 
-  //set up
+        myOscillator.frequency.value = originalFrequency;
+        myOscillator.start();
 
-  fromDate = new Date(myDate);
-  fromDate.setDate(fromDate.getDate() - 31);
+        myDistortion = mySound.createWaveShaper();
+        myDistortion.curve = makeDistortionCurve(400);
+        myDistortion.oversample = '4x';
 
-  toDate = new Date(myDate);
-  toDate.setDate(toDate.getDate() - 1);
 
-  document.forms.rangeform.from.value = formatDate(fromDate, '-');
-  document.forms.rangeform.to.value = formatDate(toDate, '-');
+        myGain = mySound.createGain();
+        myGain.gain.value = 1;
 
-  loadChart();
+        myOscillator.connect(myDistortion);
+        myDistortion.connect(myGain);
+        myGain.connect(mySound.destination);
 
-  // Events -------
+        appNode.addEventListener('mousemove', function(e) {
+          var distanceY = e.clientY - originalYPos;
+          mouseXpos = e.clientX;
+          appWidth = appNode.offsetWidth;
 
-  document.forms.rangeform.addEventListener('change', function (e) {
-    fromDate = new Date(document.rangeform.from.value);
-    toDate = new Date(document.rangeform.to.value);
+          myGain.gain.value = mouseXpos/appWidth;
+          myOscillator.frequency.value = originalFrequency + distanceY;
 
-    fromDate = fromDate.toUTCString();
-    toDate = toDate.toUTCString();
+          appNode.style.backgroundSize = ((appWidth / scaleFrequencies.length)*2) + 'px 100%';
 
-    loadChart();
-  }, false);
-}); // Page Loaded
+        }, false); //mousemove
+
+      }, false); //mousedown
+
+      appNode.addEventListener('mouseup', function() {
+        myOscillator.stop();
+        appNode.removeEventListener('mousemove', null);
+      }, false); //mouseup
+
+}); // page loaded

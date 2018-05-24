@@ -12,3 +12,15 @@
   background: url('../images/codeclinicicon_white.svg') no-repeat center center;
   background-size: contain;
 }
+
+.app {
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  cursor: pointer;
+  color: #AFA175;
+  height: 75vh;
+}
