@@ -21,12 +21,14 @@
 .dropzone {
   position: relative;
   text-align: center;
-  width: 100%;
-  min-height: 30vh;
 }
 
 .dropzone.dragover {
   border: 10px dashed #0088cc;
+}
+.dropzone .dropzone-text {
+  width: 100%;
+  min-height: 30vh;
 }
 
 .dropzone img {

@@ -28,7 +28,7 @@ $(function() {
       });
     } else {
       warningMsg.innerHTML =
-        '<p class="alert alert-danger">Sorry, you must drop and image to compare against before hitting the compare button</p>';
+        '<p class="alert alert-danger">You must drop and image to analyze</p>';
     }
   }
 
