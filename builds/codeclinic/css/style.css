@@ -4,11 +4,41 @@
   height: 1em;
   width: 1em;
   overflow: visible;
-  vertical-align: -.125em;  
+  vertical-align: -0.125em;
   text-rendering: auto;
 }
 
-.icon-codeclinic { 
+.icon-codeclinic {
   background: url('../images/codeclinicicon_white.svg') no-repeat center center;
   background-size: contain;
+}
+
+.dropzone {
+  background-color: #ccc;
+  border: 10px solid transparent;
+}
+
+.dropzone {
+  position: relative;
+  text-align: center;
+  width: 100%;
+  min-height: 30vh;
+}
+
+.dropzone.dragover {
+  border: 10px dashed #0088cc;
+}
+
+.dropzone img {
+  width: 100%;
+}
+
+.picture {
+  display: block;
+  height: auto;
+}
+
+.face {
+  position: absolute;
+  border: 2px solid #fff;
 }

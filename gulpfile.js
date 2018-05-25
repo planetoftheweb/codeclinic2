@@ -1,10 +1,6 @@
 const
   gulp = require('gulp'),
   webserver = require('gulp-server-io'),
-  babel = require('gulp-babel'),
-  sourcemaps = require('gulp-sourcemaps'),
-
-  source = 'process/',
   dest = 'builds/codeclinic/';
 
 gulp.task('html', function() {
@@ -18,15 +14,11 @@ gulp.task('css', function() {
 
 // JavaScript ES6
 gulp.task('js', function() {
-  gulp.src(source + 'js/*.js')
-    .pipe(sourcemaps.init())
-    .pipe(babel())
-    .pipe(sourcemaps.write('.'))
-    .pipe(gulp.dest(dest + 'js'));
+  gulp.src(dest + '**/*.js');
 });
 
 gulp.task('watch', function() {
-  gulp.watch(source + '**/*.js', ['js']);
+  gulp.watch(dest + '**/*.js', ['js']);
   gulp.watch(dest + '**/*.css', ['css']); //CSS
   gulp.watch(dest + '**/*.html', ['html']);
 });
@@ -36,10 +28,7 @@ gulp.task('webserver', function() {
     .pipe(webserver({
       serverReload: {
         dir: dest,
-        config: {verbose: true, debounce: 1000},
-        callback: files => {
-          // perform your server side restart
-        }
+        config: {verbose: true, debounce: 1000}
       },
       port: 3000,
       open: true
