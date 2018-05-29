@@ -1,16 +1,46 @@
-$(function() {
+(function() {
+  let fromDate = '2015-01-01';
+  let fromTime = '01:00:00';
+
+  let toDate = '2015-01-01';
+  let toTime = '10:00:00';
+
+  document.querySelector(
+    '#fromDate'
+  ).value = moment(fromDate, 'YYYY-MM-DD').format(
+    'YYYY-MM-DD'
+  );
+
+  document.querySelector(
+    '#fromTime'
+  ).value = moment(fromTime, 'hh:mm:ss').format(
+    'hh:mm:ss'
+  );
+
+  document.querySelector(
+    '#toDate'
+  ).value = moment(toDate, 'YYYY-MM-DD').format(
+    'YYYY-MM-DD'
+  );
+
+  document.querySelector(
+    '#toTime'
+  ).value = moment(toTime, 'hh:mm:ss').format(
+    'hh:mm:ss'
+  );
+
   function generateChart(data) {
-    var chart = c3.generate({
+    c3.generate({
       data: {
         y: 'barometric_pressure',
-        x: 'keys',
+        x: 'dates',
         xFormat: '%Y-%m-%d %H:%M:%S',
         json: data,
-        type: 'spline',
+        type: 'line',
         types: {
           barometric_pressure: 'scatter',
           average: 'line',
-          delta: 'line'
+          delta: 'scatter'
         }
       },
       point: {
@@ -32,53 +62,73 @@ $(function() {
   } // generateChart
 
   function loadChart() {
-    $.ajax({
-      url: 'http://pixelprowess.com/i/lake.php',
-      dataType: 'json',
-      data: {
-        // startDate: formatDate(fromDate, ''),
-        // endDate: formatDate(toDate, ''),
-        format: 'json'
-      },
-      success: function(response) {
-        var sum = response.barometric_pressure.reduce((a, b) => a + b, 0);
-        var size = response.barometric_pressure.length;
-        var avg = sum / size;
-        var begx = (response.barometric_pressure[0] + avg) / 2;
-        var endx = (response.barometric_pressure[size - 1] + avg) / 2;
-        var slope = (endx - begx) / size;
+    fetch('http://pixelprowess.com/i/lake.php', {
+      method: 'POST',
+      body: JSON.stringify({
+        fromDate: fromDate + ' ' + fromTime,
+        toDate: toDate + ' ' + toTime
+      })
+    })
+      .then(response => response.json())
+      .then(
+        response => {
+          let pressure =
+            response.barometric_pressure;
+          let sum = pressure.reduce(
+            (a, b) => a + b
+          );
+          let size = pressure.length;
+          let avg = sum / size;
 
-        // response.average = response.barometric_pressure.map(function(x) {
-        //   return avg;
-        // });
+          let begx = (pressure[0] + avg) / 2;
+          let endx =
+            (pressure[size - 1] + avg) / 2;
+          let slope = (endx - begx) / size;
 
-        // response.delta = response.barometric_pressure.map(function(x) {
-        //   return (x + avg) / 2;
-        // });
-
-        response.coefficient = response.barometric_pressure.map(function(x, i) {
-          return begx + i * slope;
-        });
-
-        generateChart(response);
-      } //success
-    }); //AJAX Call
+          //response.average = pressure.map(() => avg);
+          //response.delta = pressure.map(x => (x + avg) / 2);
+          response.coefficient = pressure.map(
+            (x, i) => begx + i * slope
+          );
+          generateChart(response);
+        } //success
+      )
+      .catch(error => console.error(error));
   } //load Chart
 
-  loadChart();
-
-  document.forms.rangeform.addEventListener(
-    'change',
-    function(e) {
-      fromDate = new Date(document.rangeform.from.value);
-      toDate = new Date(document.rangeform.to.value);
-
-      fromDate = fromDate.toUTCString();
-      toDate = toDate.toUTCString();
-
+  document
+    .querySelector('#fromDate')
+    .addEventListener('blur', () => {
+      fromDate = document.querySelector(
+        '#fromDate'
+      ).value;
       loadChart();
-    },
-    false
-  );
-}); // Page Loaded
-//# sourceMappingURL=script.js.map
+    });
+
+  document
+    .querySelector('#fromTime')
+    .addEventListener('blur', () => {
+      fromTime = document.querySelector(
+        '#fromTime'
+      ).value;
+      loadChart();
+    });
+
+  document
+    .querySelector('#toDate')
+    .addEventListener('blur', () => {
+      toDate = document.querySelector('#toDate')
+        .value;
+      loadChart();
+    });
+
+  document
+    .querySelector('#toTime')
+    .addEventListener('blur', () => {
+      toTime = document.querySelector('#toTime')
+        .value;
+      loadChart();
+    });
+
+  loadChart();
+})();

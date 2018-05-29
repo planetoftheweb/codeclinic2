@@ -14,41 +14,38 @@
 <body class="bg-info">
   <header class="header">
     <div class="container my-4">
-      <div class="display-4 font-weight-light text-white">
-        Code Clinic
-        <span class="h3 font-weight-light">Lake Pend Oreille</span>
-      </div>
+      <span class="h1 font-weight-light text-white">Code Clinic:</span>
+      <span class="h3 font-weight-light text-light">statistics</span>
     </div>
   </header>
   <div class="bg-white py-5">
     <div class="container">
-      <form name="rangeform" class="mb-2">
-        <div class="form-row justify-content-center">
-          <div class="input-group col-8 col-sm-6 col-md-4 col-lg-3 mb-2 mb-sm-auto">
-            <div class="input-group-prepend">
-              <span class="input-group-text" required>from</span>
-            </div>
-            <input class="form-control" name="from" type="datetime-local">
+      <div class="form-row justify-content-center mb-3">
+        <div class="input-group col-12 col-md-8 col-lg-5 mb-2 mb-xl-auto">
+          <div class="input-group-prepend">
+            <span class="input-group-text" required>from</span>
           </div>
-
-          <div class="input-group col-8 col-sm-6 col-md-4 col-lg-3">
-            <div class="input-group-prepend">
-              <span class="input-group-text" required>to</span>
-            </div>
-            <input class="form-control" type="datetime-local" name="to">
-          </div>
+          <input id="fromDate" class="form-control" type="date">
+          <input id="fromTime" class="form-control" type="time">
         </div>
-      </form>
+
+        <div class="input-group col-12 col-md-8 col-lg-5 mb-2 mb-xl-auto">
+          <div class="input-group-prepend">
+            <span class="input-group-text" required>to</span>
+          </div>
+          <input id="toDate" class="form-control" type="date">
+          <input id="toTime" class="form-control" type="time">
+        </div>
+      </div>
       <div id="chart"></div>
-      <p class="mt-5 text-center">Click and drag on the bottom chart to see a smaller range</p>
     </div>
   </div>
-  <!-- background -->
 
   <script src="js/jquery.min.js"></script>
   <script src="js/bootstrap.min.js"></script>
   <script src="js/d3.min.js"></script>
   <script src="js/c3.min.js"></script>
+  <script src="js/moment.min.js"></script>
 
   <script src="js/script.js"></script>
 </body>
