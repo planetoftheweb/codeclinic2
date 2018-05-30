@@ -5,6 +5,22 @@
   let toDate = '2015-01-01';
   let toTime = '10:00:00';
 
+  function generateChart(data) {
+    c3.generate({
+      data: {
+        y: 'barometric_pressure',
+        x: 'dates',
+        xFormat: '%Y-%m-%d %H:%M:%S',
+        json: data
+      },
+      axis: {
+        x: {
+          type: 'timeseries'
+        }
+      }
+    });
+  }
+
   function loadChart() {
     fetch('http://pixelprowess.com/i/lake.php', {
       method: 'POST',
@@ -15,7 +31,7 @@
     })
       .then(response => response.json())
       .then(response => {
-        console.log(response);
+        generateChart(response);
       })
       .catch(error => console.error(error));
   }
