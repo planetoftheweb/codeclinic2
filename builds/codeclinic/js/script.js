@@ -11,11 +11,23 @@
         y: 'barometric_pressure',
         x: 'dates',
         xFormat: '%Y-%m-%d %H:%M:%S',
-        json: data
+        json: data,
+        type: 'scatter',
+        types: {
+          barometric_pressure: 'scatter',
+          coefficient: 'line'
+        }
+      },
+      point: {
+        show: false
       },
       axis: {
         x: {
-          type: 'timeseries'
+          type: 'timeseries',
+          tick: {
+            count: 4,
+            format: '%Y-%m-%d %H:%M:%S'
+          }
         }
       }
     });
