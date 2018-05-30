@@ -31,6 +31,28 @@
     })
       .then(response => response.json())
       .then(response => {
+        let pressure =
+          response.barometric_pressure;
+        let sum = pressure.reduce(
+          (a, b) => a + b
+        );
+        let size = pressure.length;
+        let avg = sum / size;
+        let begx = (pressure[0] + avg) / 2;
+        let endx = (pressure[size - 1] + avg) / 2;
+        let slope = (endx - begx) / size;
+
+        // response.average = pressure.map(
+        //   () => avg
+        // );
+
+        // response.delta = pressure.map(
+        //   x => (x + avg) / 2
+        // );
+
+        response.coefficient = pressure.map(
+          (x, i) => begx + i * slope
+        );
         generateChart(response);
       })
       .catch(error => console.error(error));
