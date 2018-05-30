@@ -5,6 +5,30 @@
   let toDate = '2015-01-01';
   let toTime = '10:00:00';
 
+  document.querySelector(
+    '#fromDate'
+  ).value = moment(fromDate, 'YYYY-MM-DD').format(
+    'YYYY-MM-DD'
+  );
+
+  document.querySelector(
+    '#fromTime'
+  ).value = moment(fromTime, 'hh:mm:ss').format(
+    'hh:mm:ss'
+  );
+
+  document.querySelector(
+    '#toDate'
+  ).value = moment(toDate, 'YYYY-MM-DD').format(
+    'YYYY-MM-DD'
+  );
+
+  document.querySelector(
+    '#toTime'
+  ).value = moment(toTime, 'hh:mm:ss').format(
+    'hh:mm:ss'
+  );
+
   function generateChart(data) {
     c3.generate({
       data: {
@@ -29,6 +53,9 @@
             format: '%Y-%m-%d %H:%M:%S'
           }
         }
+      },
+      subchart: {
+        show: true //subchart
       }
     });
   }
@@ -69,6 +96,40 @@
       })
       .catch(error => console.error(error));
   }
+
+  document
+    .querySelector('#fromDate')
+    .addEventListener('blur', () => {
+      fromDate = document.querySelector(
+        '#fromDate'
+      ).value;
+      loadChart();
+    });
+
+  document
+    .querySelector('#fromTime')
+    .addEventListener('blur', () => {
+      fromTime = document.querySelector(
+        '#fromTime'
+      ).value;
+      loadChart();
+    });
+
+  document
+    .querySelector('#toDate')
+    .addEventListener('blur', () => {
+      toDate = document.querySelector('#toDate')
+        .value;
+      loadChart();
+    });
+
+  document
+    .querySelector('#toTime')
+    .addEventListener('blur', () => {
+      toTime = document.querySelector('#toTime')
+        .value;
+      loadChart();
+    });
 
   loadChart();
 })();
