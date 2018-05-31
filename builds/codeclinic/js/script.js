@@ -9,8 +9,18 @@
   function success(position) {
     let latitude = position.coords.latitude;
     let longitude = position.coords.longitude;
-    console.log(latitude);
-    console.log(longitude);
+
+    let img = document.createElement('img');
+
+    img.className = 'img-fluid';
+    img.src =
+      'https://maps.googleapis.com/maps/api/staticmap?center=' +
+      latitude +
+      ',' +
+      longitude +
+      '&zoom=12&size=600x300';
+
+    myMap.appendChild(img);
   }
 
   function error() {
