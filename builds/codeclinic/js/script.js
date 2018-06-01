@@ -38,6 +38,38 @@
       this.diagUp[index] = free;
     }
     this.position = numColumns;
+
+    this.tryNewQueen = function(row) {
+      for (
+        let column = 0;
+        column < numColumns;
+        column++
+      ) {
+        if (this.columns[column] >= 0) {
+          continue;
+        }
+
+        let diagDownIndex = row + column;
+        if (
+          this.diagDown[diagDownIndex] ===
+          occupied
+        ) {
+          continue;
+        }
+
+        let diagUpIndex =
+          this.position - 1 - row + column;
+        if (
+          this.diagUp[diagUpIndex] === occupied
+        ) {
+          continue;
+        }
+
+        this.columns[column] = row;
+        this.diagDown[diagDownIndex] = occupied;
+        this.diagUp[diagUpIndex] = occupied;
+      }
+    };
   }
 
   document
