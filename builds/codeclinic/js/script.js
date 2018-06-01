@@ -105,6 +105,38 @@
     };
   }
 
+  let myBoard = new Board();
+  myBoard.tryNewQueen(0);
+  solutionsQty = myBoard.solutions.length;
+
+  document.querySelector(
+    '#currentSolution'
+  ).innerHTML = 1;
+
+  document.querySelector(
+    '#totalSolutions'
+  ).innerHTML = solutionsQty;
+
+  for (
+    let rowIndex = 0;
+    rowIndex < myBoard.solutions.length;
+    ++rowIndex
+  ) {
+    let solution = myBoard.solutions[rowIndex];
+    let singleSolution = [];
+    for (
+      let colIndex = 0;
+      colIndex < solution.length;
+      ++colIndex
+    ) {
+      singleSolution.push(
+        columnNames[colIndex] +
+          (solution[colIndex] + 1)
+      );
+    }
+    allSolutions.push(singleSolution);
+  }
+
   document
     .querySelector('#Board')
     .addEventListener(
