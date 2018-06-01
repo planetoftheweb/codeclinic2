@@ -10,6 +10,13 @@
     let latitude = position.coords.latitude;
     let longitude = position.coords.longitude;
 
+    let link = document.createElement('a');
+    link.href =
+      'https://google.com/maps/search/?api=1&query=' +
+      latitude +
+      ',' +
+      longitude;
+
     let img = document.createElement('img');
 
     img.className = 'img-fluid';
@@ -18,9 +25,14 @@
       latitude +
       ',' +
       longitude +
-      '&zoom=12&size=600x300';
+      '&markers=color:red|' +
+      latitude +
+      ',' +
+      longitude +
+      '&zoom=12&size=600x300&scale=2';
 
-    myMap.appendChild(img);
+    link.appendChild(img);
+    myMap.appendChild(link);
   }
 
   function error() {
