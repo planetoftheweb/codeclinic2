@@ -37,7 +37,7 @@
       this.diagDown[index] = free;
       this.diagUp[index] = free;
     }
-    this.position.numColumns;
+    this.position = numColumns;
   }
 
   document
