@@ -177,6 +177,39 @@
   displaySolution(currentSolution);
 
   document
+    .querySelector('#previous')
+    .addEventListener('click', function(e) {
+      currentSolution--;
+      if (currentSolution < 1) {
+        currentSolution = allSolutions.length - 1;
+      }
+      clearBoard();
+      document.querySelector(
+        '#currentSolution'
+      ).innerHTML =
+        currentSolution + 1;
+      displaySolution(currentSolution);
+    });
+
+  document
+    .querySelector('#next')
+    .addEventListener('click', function(e) {
+      currentSolution++;
+      if (
+        currentSolution >
+        allSolutions.length - 1
+      ) {
+        currentSolution = 0;
+      }
+      clearBoard();
+      document.querySelector(
+        '#currentSolution'
+      ).innerHTML =
+        currentSolution + 1;
+      displaySolution(currentSolution);
+    });
+
+  document
     .querySelector('#Board')
     .addEventListener(
       'click',
