@@ -69,6 +69,38 @@
         this.columns[column] = row;
         this.diagDown[diagDownIndex] = occupied;
         this.diagUp[diagonalUpIndex] = occupied;
+
+        if (row === this.width - 1) {
+          this.solutions.push(
+            this.columns.slice(0)
+          );
+
+          for (
+            let rowIndex = 0;
+            rowIndex < this.solutions.length;
+            ++rowIndex
+          ) {
+            let solution = this.solutions[
+              rowIndex
+            ];
+            var line = '';
+            for (
+              let colIndex = 0;
+              colIndex < this.solutions.length;
+              ++colIndex
+            ) {
+              line +=
+                columnNames[colIndex] +
+                (solution[colIndex] + 1 + ' ');
+            }
+          }
+        } else {
+          this.tryNewQueen(row + 1);
+        }
+
+        this.columns[column] = -1;
+        this.diagDown[diagDownIndex] = free;
+        this.diagUp[diagonalUpIndex] = free;
       }
     };
   }
