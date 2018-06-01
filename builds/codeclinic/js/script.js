@@ -57,17 +57,18 @@
           continue;
         }
 
-        let diagUpIndex =
+        let diagonalUpIndex =
           this.position - 1 - row + column;
         if (
-          this.diagUp[diagUpIndex] === occupied
+          this.diagUp[diagonalUpIndex] ===
+          occupied
         ) {
           continue;
         }
 
         this.columns[column] = row;
         this.diagDown[diagDownIndex] = occupied;
-        this.diagUp[diagUpIndex] = occupied;
+        this.diagUp[diagonalUpIndex] = occupied;
       }
     };
   }
