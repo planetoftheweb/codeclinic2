@@ -137,6 +137,45 @@
     allSolutions.push(singleSolution);
   }
 
+  function displaySolution(solutionId) {
+    for (
+      let index = 0;
+      index < allSolutions[solutionId].length;
+      index++
+    ) {
+      document.querySelector(
+        '#' +
+          allSolutions[solutionId][index] +
+          ' .queen'
+      ).style.fill =
+        '#D33682';
+    }
+  }
+
+  function clearBoard() {
+    for (
+      let colIndex = 0;
+      colIndex < columnNames.length;
+      colIndex++
+    ) {
+      for (
+        let rowIndex = 0;
+        rowIndex < numColumns;
+        rowIndex++
+      ) {
+        document.querySelector(
+          '#' +
+            columnNames[colIndex] +
+            (rowIndex + 1) +
+            ' .queen'
+        ).style.fill =
+          'transparent';
+      }
+    }
+  }
+
+  displaySolution(currentSolution);
+
   document
     .querySelector('#Board')
     .addEventListener(
