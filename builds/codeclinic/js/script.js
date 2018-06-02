@@ -45,6 +45,11 @@
   var appNode = document.querySelector('.app');
   var appWidth = appNode.offsetWidth;
 
+  appNode.style.background =
+    'repeating-linear-gradient(to right, #FDF6E4, #FDF6E4 50%, #F7EFD7 50%, #F7EFD7)';
+  appNode.style.backgroundSize =
+    appWidth / scaleFrequencies.length * 2 + 'px 100%';
+
   if (contextClass) {
     mySoundContext = new contextClass();
   } else {
@@ -81,9 +86,23 @@
     myOscillator.connect(myDistortion);
     myDistortion.connect(myGain);
     myGain.connect(mySoundContext.destination);
+
+    appNode.addEventListener('mousemove', e => {
+      var distanceY = e.clientY - originalYPos;
+      mouseXPos = e.clientX;
+      appWidth = appNode.offsetWidth;
+
+      myGain.gain.value = mouseXPos / appWidth;
+      myOscillator.frequency.value =
+        originalFrequency + distanceY;
+
+      appNode.style.backgroundSize =
+        appWidth / scaleFrequencies.length * 2 + 'px 100%';
+    });
   });
 
   appNode.addEventListener('mouseup', e => {
     myOscillator.stop();
+    appNode.removeEventListener('mousemove', null);
   });
 })();
