@@ -1,10 +1,26 @@
 (function() {
-  var mySoundContext, myOscillator, myGain, myDistortion;
+  var mySoundContext,
+    myOscillator,
+    myGain,
+    myDistortion,
+    myOscillator;
+
   var contextClass =
     window.AudioContext || window.webkitAudioContext;
 
+  var appNode = document.querySelector('.app');
+
   if (contextClass) {
     mySoundContext = new contextClass();
+  } else {
+    document.querySelector('.app').innerHTML =
+      '<div class="container alert alert-danger">Sorry, this app requires the Web Audio API, which your browser does not support</div>';
+  }
+
+  appNode.addEventListener('mousedown', e => {
+    if (myOscillator) {
+      myOscillator.stop();
+    }
 
     myOscillator = mySoundContext.createOscillator();
     myOscillator.type = 'sine';
@@ -12,15 +28,16 @@
     myOscillator.start();
 
     myGain = mySoundContext.createGain();
-    myGain.gain.value = 0;
+    myGain.gain.value = 0.1;
 
     myDistortion = mySoundContext.createWaveShaper();
 
     myOscillator.connect(myDistortion);
     myDistortion.connect(myGain);
     myGain.connect(mySoundContext.destination);
-  } else {
-    document.querySelector('.app').innerHTML =
-      '<div class="container alert alert-danger">Sorry, this app requires the Web Audio API, which your browser does not support</div>';
-  }
+  });
+
+  appNode.addEventListener('mouseup', e => {
+    myOscillator.stop();
+  });
 })();
