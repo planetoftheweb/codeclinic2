@@ -152,4 +152,3 @@ $(function() {
     false
   ); //mouseup
 }); // page loaded
-//# sourceMappingURL=script.js.map
