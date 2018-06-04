@@ -26,21 +26,34 @@ $(function() {
 
         $('#progress-pulsometer').css(
           'width',
-          (data.pulsometer_readout - 1) / 255 * 100 + '%'
+          ((data.pulsometer_readout - 1) / 255) * 100 + '%'
         );
-        $('#progress-pulsometer').text(data.pulsometer_readout);
+        $('#progress-pulsometer').text(
+          data.pulsometer_readout
+        );
 
         $('#progress-efficiency').css(
           'width',
-          data.engine_efficiency / 100 * 100 + '%'
+          (data.engine_efficiency / 100) * 100 + '%'
         );
-        $('#progress-efficiency').text(data.engine_efficiency);
+        $('#progress-efficiency').text(
+          data.engine_efficiency
+        );
 
-        $('#progress-red').css('width', data.red_value / 255 * 100 + '%');
+        $('#progress-red').css(
+          'width',
+          (data.red_value / 255) * 100 + '%'
+        );
         $('#progress-red').text(data.red_value);
-        $('#progress-green').css('width', data.green_value / 255 * 100 + '%');
+        $('#progress-green').css(
+          'width',
+          (data.green_value / 255) * 100 + '%'
+        );
         $('#progress-green').text(data.green_value);
-        $('#progress-blue').css('width', data.blue_value / 255 * 100 + '%');
+        $('#progress-blue').css(
+          'width',
+          (data.blue_value / 255) * 100 + '%'
+        );
         $('#progress-blue').text(data.blue_value);
         $('#current-color').css(
           'backgroundColor',
@@ -57,7 +70,6 @@ $(function() {
           data_green.splice(1, 1);
           data_blue.splice(1, 1);
         }
-        console.log(data);
 
         data_red.push(data.red_value);
         data_green.push(data.green_value);
@@ -65,16 +77,7 @@ $(function() {
         chart.load({
           columns: [data_red, data_green, data_blue]
         });
-
-        // aria - valuenow="25"
       } //success
     }); //AJAX Call
   }, 1000);
 }); // Page Loaded
-
-// time_stamp
-// pulsometer_readout
-// engine_efficiency
-// red_value
-// green_value
-// blue_value
