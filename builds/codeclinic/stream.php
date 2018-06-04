@@ -1,5 +1,4 @@
 <?php
-  error_reporting(E_ALL);
   header('Access-Control-Allow-Origin: http://localhost:3000');
   $host="";
   $user="";
