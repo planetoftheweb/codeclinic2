@@ -1,16 +1,8 @@
-# Introduction
-Hi there, this is Ray Villalobos welcome to this course.
+Introduction (00_01)
+Hello, and welcome to Code Clinic for __LANGUAGE__. My name is __NAME__. I'm really looking forward to showing you my solutions for the challenges proposed to the Code Clinic authors. In this series, we'll explore creative and efficient ways to use __LANGUAGE__ to solve a range of problems. I'll describe some of the unique aspects of working with __LANGUAGE__, and offer suggestions on how to improve your code. If you are new to programming, or if you are a seasoned programmer, this series of videos will be beneficial to you, showing you how to effectively use the __LANGUAGE__ programming language in real world solutions. After watching each solution, you will come away with patterns for writing __LANGUAGE__ programs as well as reusable code that you can use in your own projects.
 
-In this course we're going to create an interface using Vue.js, an easy to learn framework for building user interfaces.
+If you search our library for Code Clinic, you'll find additional courses by different authors, using other languages. Each Code Clinic author solves the exact same set of problems, so you can compare different solutions, as well as the pros and cons of each language.
 
-I'll start by showing you how to create a basic Vue.js application and then show you how to organize your applications so that you can use the power of modular programming to organize your apps into different components.
+If you're wanting to learn to program, if you’re looking for tips on better coding, or if you’re trying to decide on your next new programming language, you're going to love Code Clinic. 
 
-I'll talk about lifecycle methods and how you can use the to load data from a file or an api. Then we'll take a look at how you can communicate between components to build more powerful applications.
-
-We'll take a look at typical tasks that need to be on an interface including working with records by adding them to your data, deleting them from that data and modifying them through the interface.
-
-We'll build an interactive search component that can search as well as sort through your records.
-
-This course is designed as a project based course that will show you a practical way to use Vue.js to build a component based application.
-
-There's a lot to learn, but that's why you're here, so let's get started.
+So, let's get started with Code Clinic for __LANGUAGE__.

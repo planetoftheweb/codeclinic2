@@ -1,7 +1,7 @@
 ## Explanation of Exercise Files
 
 # Introduction
-All of the files for this course are freely available in GitHub for all users at this URL(https://github.com/planetoftheweb/vueinterface). In GitHub, you'll see that the project is organized into branches. Each branch corresponds to a video in the course. They are named according to the video they correspond to. If you see a branch that starts with a name like 01_03, that means that the branch corresponds to the `FIRST CHAPTER` and refers to the `THIRD` video in that chapter. Also, if you see a `B` at the end of the name, those are how the files looked like at the beginning of the video. And if you see an `E` at the end of the name, that's how the files looked like at the end of the video.
+All of the files for this course are freely available in GitHub for all users at this URL(https://github.com/planetoftheweb/codeclinic2). In GitHub, you'll see that the project is organized into branches. Each branch corresponds to a video in the course. They are named according to the video they correspond to. If you see a branch that starts with a name like 01_03, that means that the branch corresponds to the `FIRST CHAPTER` and refers to the `THIRD` video in that chapter. Also, if you see a `B` at the end of the name, those are how the files looked like at the beginning of the video. And if you see an `E` at the end of the name, that's how the files looked like at the end of the video.
 
 The best way to work with the project is to clone all the branches at once. In order to do that, you'll need Node.js as well as Git installed. You can find Node.js and download the installer at this [URL](https://nodejs.org/en/), and you can find Git and download the installer for your platform at this [URL](https://git-scm.com/). When you install Git, make sure you add the Git Bash terminal in Windows. It makes running the commands more consistent.
 
@@ -11,7 +11,7 @@ Once I do that, I'm going to switch over to a Terminal
 
 `> cd ~/Desktop`
 
-On a PC, I'll be running something like Git Bash or something that is compatible with Unix terminal commands. Once I do that, I can create a directory
+On a PC, I'll be running something like Git Bash, powershell or something that is compatible with Unix terminal commands. Once I do that, I can create a directory
 
 `> mkdir vueinterface`
 `> cd vueinterface`
