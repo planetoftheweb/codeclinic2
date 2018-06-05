@@ -1,3 +1,12 @@
+## Code Clinic: JavaScript
+
+- HTML, CSS
+- JavaScript
+- Bootstrap
+- Git & Github
+
+> > Author Notes:
+
 This is not a beginner course and I'm assuming that you've got a lot of prior experience before coming to this course.
 
 You should have experience creating websites and specifically have some type of background with HTML, CSS and a good understanding of JavaScript.
