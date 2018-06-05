@@ -1,4 +1,14 @@
 $(function() {
+  var data_red = ['red'];
+  var data_green = ['green'];
+  var data_blue = ['blue'];
+
+  var chart = c3.generate({
+    data: {
+      columns: [['red'], ['green'], ['blue']]
+    }
+  });
+
   setInterval(function() {
     $.ajax({
       url: 'http://pixelprowess.com/i/stream.php',
@@ -30,6 +40,12 @@ $(function() {
             data.blue_value +
             ')'
         );
+        data_red.push(data.red_value);
+        data_green.push(data.green_value);
+        data_blue.push(data.blue_value);
+        chart.load({
+          columns: [data_red, data_green, data_blue]
+        }); //load
       }
     });
   }, 1000);
