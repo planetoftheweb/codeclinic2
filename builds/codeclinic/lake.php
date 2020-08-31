@@ -2,45 +2,82 @@
   header('Access-Control-Allow-Origin: *');
   date_default_timezone_set('US/Eastern');
 
-  //Database Connection Constants
-  $host="";
-  $user="";
-  $password="";
-  $dbname="";
+  //Database Connection Object
+  class c_db{
+    private $host='';
+    private $user='';
+    private $db='';
+    private $pass='';
+    public $conn;
 
-  $entityBody = file_get_contents('php://input');
-  $data = json_decode($entityBody);
-
-  if ($entityBody) {
-    $fromDate = $data->{'fromDate'};
-    $toDate = $data->{'toDate'};
-  } else {
-    $fromDate = '2015-01-01 00:00';
-    $toDate = '2015-01-01 00:10';
+    public function __construct(){
+      $this->conn = new PDO('mysql:host='.$this->host.';dbname='.$this->db. ';charset=utf8',$this->user,$this->pass);
+      $this->conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+   }
   }
 
-  //Connect to the database
-  $con=mysqli_connect($host, $user, $password, $dbname);
-  // Check connection
-  if (mysqli_connect_errno()) {
-    echo "Failed to connect to MySQL: " . mysqli_connect_error();
+  //Data selector object
+  class c_table{
+    private $fromDate = '2020-08-01 00:00'; //default value
+    private $toDate = '2020-08-01 00:10'; //default value
+
+    private $table = "SELECT JSON_OBJECT( 'barometric_pressure', JSON_ARRAYAGG(`applicant_name`), 
+                                          'reading_date', JSON_ARRAYAGG(`applicant_zip`)
+                                         ) as `result`
+      FROM `lake` WHERE `reading_date` BETWEEN :fromDate AND :toDate;"; //Preparing SQL statement
+
+    public function data($p_filed, $p_data){
+      //Validator and value setter
+      $l_date = date('Y-m-d', strtotime($p_data));
+      switch ($p_filed) {
+        case 'fromDate':
+          $this->fromDate = $l_date;
+        break;
+        case 'toDate':
+          $this->toDate = $l_date;
+        break;
+      }
+    }
+
+    public function request(){
+      //Connecting to DB
+      $l_s = new c_db();
+      $l_sth = $l_s->conn->prepare($this->table, array(PDO::ATTR_CURSOR => PDO::CURSOR_FWDONLY));
+
+      //Binding values to prepared statement
+      $l_sth->bindValue(':fromDate', $this->fromDate, PDO::PARAM_STR);
+      $l_sth->bindValue(':toDate', $this->toDate, PDO::PARAM_STR);
+
+      try {
+        //Requesting DB
+        $l_sth->execute();
+        //Fetching results
+        $this->rows = $l_sth->fetchAll(PDO::FETCH_ASSOC);
+        //Closing DB connection
+        $l_s->conn = null;
+      } catch (\Exception $e) {
+        //Closing DB connection
+        $l_s->conn = null;
+        //Reporting error
+        die(json_encode($e));
+      }
+
+    }
+
   }
 
-  $sql="SELECT reading_date, barometric_pressure from lake  WHERE reading_date BETWEEN \"$fromDate\" and \"$toDate\"";
-  $result=mysqli_query($con, $sql);
+$entityBody = file_get_contents('php://input');
+$data = json_decode($entityBody);
 
-  // Numeric array
-  $bp_arr = array();
-  $rd_arr = array();
+//Calling parametered data from DB
+$l_r = new c_table();
+$l_r->data('fromDate', $data->fromDate);
+$l_r->data('toDate', $data->toDate);
+$l_r->request();
 
-  // create temporary arrays
-  while($row = mysqli_fetch_array($result,MYSQLI_ASSOC)) {
-    array_push($bp_arr , $row['barometric_pressure']);
-    array_push($rd_arr , "\"".$row['reading_date']."\"");
-  }
+//Showing result
+echo $l_r->rows[0]['result'];
 
-  //output
-  echo "{ \"barometric_pressure\": [". join(', ', $bp_arr)."], \"dates\": [". join(', ', $rd_arr)."]}";
 
-  mysqli_close($con);
+
 ?>
